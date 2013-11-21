@@ -39,7 +39,7 @@ public class App {
 
         final Map<String, String> map = new ConcurrentHashMap<>();
 
-        final Path startPath = Paths.get("C:", "temp");
+        final Path startPath = Paths.get("/", "home", "kristof");
         final List<Runnable> runnables = new ArrayList<>();
         System.out.println("before walkFileTree");
 
@@ -53,14 +53,8 @@ public class App {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                 if (dir != null && attrs != null && attrs.isDirectory()) {
-                    if (dir.endsWith(".hg")
-                            || dir.endsWith(".hg")
-                            || dir.endsWith(".git")
-                            || dir.endsWith("CVS")
-                            || dir.endsWith(".svn")
-                            || dir.endsWith(".Trashes")
-                            || dir.endsWith(".fseventsd")
-                            || dir.endsWith(".Spotlight-V100")) {
+                    if (dir.endsWith("CVS")
+                            || dir.getFileName().toString().startsWith(".")) {
                         String canonicalPath;
                         try {
                             canonicalPath = dir.toFile().getCanonicalPath();
@@ -84,7 +78,10 @@ public class App {
             public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
                 //System.out.println("visitFile");
                 if (attrs.isRegularFile()) {
-                    if (file.endsWith("Thumbs.db")) {
+                    if (file.endsWith("Thumbs.db")
+                            || file.getFileName().toString().startsWith(".")
+                            || file.getFileName().toString().endsWith("~")
+                            || file.getFileName().toString().endsWith(".bak")) {
                         String canonicalPath;
                         try {
                             canonicalPath = file.toFile().getCanonicalPath();
